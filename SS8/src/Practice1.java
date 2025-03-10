@@ -8,6 +8,7 @@ public class Practice1 {
         int[] arr = new int[1000];
         int choice;
         int count;
+        int k=0;
         do {
             System.out.println("***********************MENU**************************");
             System.out.println("1. Nhập giá trị n phần tử của mảng");
@@ -23,11 +24,11 @@ public class Practice1 {
             choice = sc.nextInt();
             switch (choice) {
                 case 1:
-                    System.out.printf("vui lòng nhập số phần tử trong mảng ");
-                    n = Integer.parseInt(sc.nextLine());
+                    System.out.print("Vui lòng nhập số phần tử trong mảng: ");
+                    n = sc.nextInt();
                     for (int i = 0; i < n; i++) {
-                        System.out.printf("arr[%d] = : \n", i);
-                        i = Integer.parseInt(sc.nextLine());
+                        System.out.printf("arr[%d] = ", i);
+                        arr[i] = sc.nextInt();
                     }
                     break;
                 case 2:
@@ -44,17 +45,20 @@ public class Practice1 {
                             count++;
                         }
                     }
-                    System.out.printf("Trung bình của các số dương trong mảng là : %d \n", (double) sum / count);
+                    System.out.printf("Trung bình của các số dương trong mảng là : %.2f \n", (double) sum / count);
+
                     break;
                 case 4:
-                    int k = 0;
-                    System.out.println("Chỉ số của các phần tử cso giá trị bằng k là :");
+                    System.out.print("Nhập giá trị k cần tìm: ");
+                    k = sc.nextInt();
+                    System.out.println("Chỉ số của các phần tử có giá trị bằng k là:");
                     for (int i = 0; i < n; i++) {
                         if (arr[i] == k) {
                             System.out.println(i + " ");
                         }
                     }
                     break;
+
                 case 5:
                     int temp = 0;
                     for (int i = 0; i < n; i++) {
@@ -141,25 +145,20 @@ public class Practice1 {
                     int value = Integer.parseInt(sc.nextLine());
 
                     System.out.println("Vui lòng nhập vị trí cần chèn:");
-                    int manag = Integer.parseInt(sc.nextLine());
+                    int position = Integer.parseInt(sc.nextLine());
 
-                    if (manag < 0 || manag > n) {
+                    if (position < 0 || position > n) {
                         System.out.println("Vị trí không hợp lệ!");
                         break;
                     }
-
                     int[] newArr = new int[n + 1];
-
-                    for (int i = 0; i < manag; i++) {
+                    for (int i = 0; i < position; i++) {
                         newArr[i] = arr[i];
                     }
-
-                    newArr[manag] = value;
-
-                    for (int i = manag + 1; i < newArr.length; i++) {
+                    newArr[position] = value;
+                    for (int i = position + 1; i < newArr.length; i++) {
                         newArr[i] = arr[i - 1];
                     }
-
                     int temp1;
                     for (int i = 0; i < newArr.length - 1; i++) {
                         for (int j = i + 1; j < newArr.length; j++) {
@@ -170,7 +169,6 @@ public class Practice1 {
                             }
                         }
                     }
-
                     System.out.println("Mảng sau khi chèn và sắp xếp:");
                     for (int i = 0; i < newArr.length; i++) {
                         System.out.print(newArr[i] + " ");
@@ -181,7 +179,6 @@ public class Practice1 {
                 case 9:
                     System.out.println("Thoát chương trình!");
                     System.exit(0);
-                    break;
                 default:
                     System.out.println("Lựa chọn không hợp lệ. Vui lòng nhập lại.");
             }

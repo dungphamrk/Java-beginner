@@ -63,10 +63,10 @@ public class Practice2 {
                     System.out.println("Tổng các phần tử nằm trên đường biên, đường chéo : " + sum);
                     break;
                 case 5:
-                    for (int j = 0; j < n; j++) {
-                        for (int i = 0; i < m - 1; i++) {
+                    for (int j = 0; j < m; j++) {  // Duyệt từng cột
+                        for (int i = 0; i < n - 1; i++) {
                             int minIndex = i;
-                            for (int k = i + 1; k < m; k++) {
+                            for (int k = i + 1; k < n; k++) { // Duyệt theo hàng
                                 if (numbers[k][j] < numbers[minIndex][j]) {
                                     minIndex = k;
                                 }
@@ -85,38 +85,48 @@ public class Practice2 {
                         System.out.println();
                     }
                     break;
+
                 case 6:
-                    for (int  i = 0; i < numbers.length; i++) {
+                    System.out.println("Các số nguyên tố trong ma trận:");
+                    for (int i = 0; i < numbers.length; i++) {
                         for (int j = 0; j < numbers[i].length; j++) {
-                            boolean isPrime = true;
-                            if (numbers[i][j] % 2 == 0) {
-                                isPrime = false;
-                            } else {
-                                for (int k = 2; k <= Math.sqrt(numbers[i][j]); k++) {
-                                    if (numbers[i][j] % k == 0) {
+                            int num = numbers[i][j];
+                            if (num > 1) {
+                                boolean isPrime = true;
+                                for (int k = 2; k <= Math.sqrt(num); k++) {
+                                    if (num % k == 0) {
                                         isPrime = false;
                                         break;
                                     }
                                 }
+                                if (isPrime) {
+                                    System.out.printf("%4d", num);
+                                }
                             }
-
-                            if (isPrime) {
-                                System.out.printf("Các số nguyên tố trong ma trận : %d", numbers[i][j]);
-                            }
-                            System.out.println();
                         }
                     }
+                    System.out.println();
                     break;
                 case 7:
-                    for (int i = 1; i < Math.min(m, n); i++) {
-                        int key = numbers[i][i];
-                        int j = i - 1;
+                    int size = Math.min(m, n);
+                    int[] diagonal = new int[size];
 
-                        while (j >= 0 && numbers[j][j] < key) {
-                            numbers[j + 1][j + 1] = numbers[j][j];
+                    for (int i = 0; i < size; i++) {
+                        diagonal[i] = numbers[i][i];
+                    }
+
+                    for (int i = 1; i < size; i++) {
+                        int key = diagonal[i];
+                        int j = i - 1;
+                        while (j >= 0 && diagonal[j] < key) {
+                            diagonal[j + 1] = diagonal[j];
                             j--;
                         }
-                        numbers[j + 1][j + 1] = key;
+                        diagonal[j + 1] = key;
+                    }
+
+                    for (int i = 0; i < size; i++) {
+                        numbers[i][i] = diagonal[i];
                     }
 
                     System.out.println("Ma trận sau khi sắp xếp đường chéo chính giảm dần:");
@@ -127,9 +137,16 @@ public class Practice2 {
                         System.out.println();
                     }
                     break;
+
                 case 8:
                     System.out.print("Nhập số phần tử của mảng 1 chiều: ");
                     int k = scanner.nextInt();
+
+                    if (k != m) {
+                        System.out.println("Số phần tử của mảng 1 chiều phải bằng số cột của mảng 2 chiều.");
+                        break;
+                    }
+
                     int[] array = new int[k];
 
                     System.out.println("Nhập các phần tử của mảng 1 chiều:");
@@ -138,15 +155,13 @@ public class Practice2 {
                         array[i] = scanner.nextInt();
                     }
 
-                    System.out.print("Nhập chỉ số dòng muốn chèn vào : ");
+                    System.out.print("Nhập chỉ số dòng muốn chèn vào (0 đến " + (n - 1) + "): ");
                     int rowIndex = scanner.nextInt();
 
                     if (rowIndex < 0 || rowIndex >= n) {
                         System.out.println("Chỉ số dòng không hợp lệ.");
                     } else {
-                        for (int j = 0; j < m; j++) {
-                            numbers[rowIndex][j] = array[j];
-                        }
+                        System.arraycopy(array, 0, numbers[rowIndex], 0, m);
 
                         System.out.println("Ma trận 2 chiều sau khi chèn:");
                         for (int i = 0; i < numbers.length; i++) {
@@ -157,6 +172,7 @@ public class Practice2 {
                         }
                     }
                     break;
+
                 case 9:
                     System.exit(0);
                 default:
