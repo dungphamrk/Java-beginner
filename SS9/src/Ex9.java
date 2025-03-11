@@ -12,24 +12,16 @@ public class Ex9 {
             simplify();
         }
         public Fraction add(Fraction other) {
-            int newNumerator = this.numerator * other.denominator + other.numerator * this.denominator;
-            int newDenominator = this.denominator * other.denominator;
-            return new Fraction(newNumerator, newDenominator);
+            return new Fraction(this.numerator * other.denominator + other.numerator * this.denominator, this.denominator * other.denominator);
         }
         public Fraction subtract(Fraction other) {
-            int newNumerator = this.numerator * other.denominator - other.numerator * this.denominator;
-            int newDenominator = this.denominator * other.denominator;
-            return new Fraction(newNumerator, newDenominator);
+            return new Fraction( this.numerator * other.denominator - other.numerator * this.denominator, this.denominator * other.denominator);
         }
         public Fraction multiply(Fraction other) {
-            int newNumerator = this.numerator * other.numerator;
-            int newDenominator = this.denominator * other.denominator;
-            return new Fraction(newNumerator, newDenominator);
+            return new Fraction(this.numerator * other.numerator, this.denominator * other.denominator);
         }
         public Fraction divide(Fraction other) {
-            int newNumerator = this.numerator * other.denominator;
-            int newDenominator = this.denominator * other.numerator;
-            return new Fraction(newNumerator, newDenominator);
+            return new Fraction(this.numerator * other.denominator, this.denominator * other.numerator);
         }
         // tìm ước chung lớn nhất
         private int gcd(int a, int b) {
