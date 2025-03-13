@@ -38,7 +38,6 @@ public class Ex9 {
                 denominator = -denominator;
             }
         }
-        @Override
         public String toString() {
             return numerator + "/" + denominator;
         }
@@ -48,9 +47,9 @@ public class Ex9 {
         Fraction f2 = new Fraction(2, 5);
         System.out.println("Phân số 1: " + f1);
         System.out.println("Phân số 2: " + f2);
-        System.out.println("Cộng: " + f1.add(f2).toString());
-        System.out.println("Trừ: " + f1.subtract(f2).toString());
-        System.out.println("Nhân: " + f1.multiply(f2).toString());
-        System.out.println("Chia: " + f1.divide(f2).toString());
+        System.out.println("Cộng: " + f1.add(f2));
+        System.out.println("Trừ: " + f1.subtract(f2));
+        System.out.println("Nhân: " + f1.multiply(f2));
+        System.out.println("Chia: " + f1.divide(f2));
     }
 }
