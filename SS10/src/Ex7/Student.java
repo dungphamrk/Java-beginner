@@ -10,6 +10,7 @@ public class Student {
         this.id = id;
         this.gpa = gpa;
     }
+
     public void getDetails(){
         System.out.println("Name: " + name);
         System.out.println("ID: " + id);
