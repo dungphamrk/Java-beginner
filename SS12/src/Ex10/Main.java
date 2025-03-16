@@ -2,20 +2,16 @@ package Ex10;
 
 public class Main {
     public static void main(String[] args) {
-        PaymentMethod creditCard = new CreditCard(1000);
-        PaymentMethod debitCard = new DebitCard(1000);
-        PaymentMethod cash = new Cash(1000);
-
-        System.out.println("CreditCard:");
+        PaymentMethod creditCard = new CreditCard(11111000);
+        PaymentMethod debitCard = new DebitCard(123111);
+        PaymentMethod cash = new Cash(22231);
         creditCard.processPayment();
-        creditCard.processPayment(1000, "USD");
-
-        System.out.println("\nDebitCard:");
+        creditCard.processPayment(123, "USD");
+        System.out.println();
         debitCard.processPayment();
-        debitCard.processPayment(1000, "EUR");
-
-        System.out.println("\nCash:");
+        debitCard.processPayment(123, "EUR");
+        System.out.println();
         cash.processPayment();
-        cash.processPayment(1000, "VND");
+        cash.processPayment(32323, "JPY");
     }
 }

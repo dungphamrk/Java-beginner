@@ -9,6 +9,7 @@ public abstract class PaymentMethod {
     abstract double calculateFee();
     public void processPayment(double amount, String currency) {
         double totalAmount = amount + calculateFee();
-        System.out.println("Tổng tiền phải trả: " + totalAmount + " " + currency);
+        System.out.println("Processed payment of " + amount + " " + currency + " with total: " + totalAmount + " " + currency);
     }
 }
+

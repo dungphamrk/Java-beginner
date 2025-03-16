@@ -13,6 +13,7 @@ public class CreditCard extends PaymentMethod {
     @Override
     void processPayment() {
         double totalAmount = amount + calculateFee();
-        System.out.println("Tổng tiền phải trả: " + totalAmount);
+        System.out.println("--- Credit Card ---");
+        System.out.println("Total Payment (CreditCard): " + totalAmount);
     }
 }

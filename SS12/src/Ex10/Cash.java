@@ -12,6 +12,7 @@ public class Cash extends PaymentMethod{
 
     @Override
     void processPayment() {
-        System.out.println("Tổng tiền phải trả: " + amount);
+        System.out.println("--- Cash ---");
+        System.out.println("Total Payment (Cash): " + amount);
     }
 }

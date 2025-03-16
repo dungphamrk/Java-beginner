@@ -11,6 +11,7 @@ public class DebitCard extends PaymentMethod{
     @Override
     void processPayment() {
         double totalAmount = amount + calculateFee();
-        System.out.println("Tổng tiền phải trả: " + totalAmount);
+        System.out.println("--- Debit Card ---");
+        System.out.println("Total Payment (DebitCard): " + totalAmount);
     }
 }
