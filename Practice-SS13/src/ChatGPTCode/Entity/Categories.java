@@ -2,7 +2,7 @@ package ChatGPTCode.Entity;
 
 import java.util.Scanner;
 
-public class Categories implements ChatGPT.IApp {
+public class Categories implements ChatGPTCode.Entity.IApp {
     private static int countId = 1;
     private int id;
     private String name;
