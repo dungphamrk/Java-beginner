@@ -2,8 +2,6 @@ package ra.entity;
 
 import ra.validate.BookValidate;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Book implements IApp {
@@ -15,7 +13,6 @@ public class Book implements IApp {
     private String category;
     private double price;
     private int quantity;
-    private static List<Book> books = new ArrayList<>();
     private static int bookCounter = 1;
 
     public Book() {
@@ -43,7 +40,6 @@ public class Book implements IApp {
         this.category = BookValidate.inputCategory(scanner);
         this.price = BookValidate.inputPrice(scanner);
         this.quantity = BookValidate.inputQuantity(scanner);
-        books.add(this);
     }
 
     @Override
@@ -111,9 +107,5 @@ public class Book implements IApp {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public static List<Book> getBooks() {
-        return books;
     }
 }

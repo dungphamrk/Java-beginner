@@ -1,10 +1,15 @@
 package ra.presentation;
 
 import ra.business.BookBusiness;
+import ra.entity.Book;
 
 import java.util.Scanner;
 
 public class BookApplication {
+    private static final int MAX_BOOKS = 100;
+    private static Book[] listBook = new Book[MAX_BOOKS];
+    private static int currentSize = 0;
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         BookBusiness business = new BookBusiness(scanner);
@@ -16,22 +21,22 @@ public class BookApplication {
 
             switch (choice) {
                 case 1:
-                    business.displayAllBooks();
+                    business.displayAllBooks(listBook, currentSize);
                     break;
                 case 2:
-                    business.addNewBooks();
+                    currentSize = business.addNewBooks(listBook, currentSize, MAX_BOOKS);
                     break;
                 case 3:
-                    business.editBook();
+                    currentSize = business.editBook(listBook, currentSize);
                     break;
                 case 4:
-                    business.deleteBook();
+                    currentSize = business.deleteBook(listBook, currentSize);
                     break;
                 case 5:
-                    business.searchBook();
+                    business.searchBook(listBook, currentSize);
                     break;
                 case 6:
-                    business.sortBooks();
+                    business.sortBooks(listBook, currentSize);
                     break;
                 case 0:
                     System.out.println("Thoát chương trình!");
