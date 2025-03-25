@@ -2,7 +2,6 @@ package manager;
 import entity.Student;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,9 +11,9 @@ public class Mgstudent {
 
         System.out.println("Danh sách thông tin của các học sinh là: ");
         for(Student student:students.values()){
-            student.toString();
+            System.out.println(student);
         }
-        if(students.size()==0){
+        if(students.isEmpty()){
             System.out.println("Không có học sinh để in ra");
         }
     }
@@ -50,7 +49,7 @@ public class Mgstudent {
                 highestScoreOfStudent = student;
             }
         }
-        System.out.println("Học sinh có điểm cao nhất là: "+ highestScoreOfStudent.toString());
+        System.out.println("Học sinh có điểm cao nhất là: "+ highestScoreOfStudent);
     }
    public static  void minAgeOfAllStudent(){
        List<Student> listStudent = new ArrayList<Student>(students.values());
@@ -60,7 +59,7 @@ public class Mgstudent {
                youngestStudent = student;
            }
        }
-       System.out.println("Học sinh có tuổi nhỏ nhất là: " + youngestStudent.toString());
+       System.out.println("Học sinh có tuổi nhỏ nhất là: " + youngestStudent);
    }
 
 }
