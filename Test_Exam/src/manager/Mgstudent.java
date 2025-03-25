@@ -9,12 +9,17 @@ import java.util.Scanner;
 import static presentation.StudentManagement.students;
 public class Mgstudent {
     public static void displayStudents(){
+
         System.out.println("Danh sách thông tin của các học sinh là: ");
         for(Student student:students.values()){
             student.toString();
         }
+        if(students.size()==0){
+            System.out.println("Không có học sinh để in ra");
+        }
     }
     public static void addStudent(Scanner scanner){
+        scanner.nextLine();
         Student newStudent = new Student();
         newStudent.inputData(scanner);
         students.put(newStudent.getStudentID(), newStudent);
