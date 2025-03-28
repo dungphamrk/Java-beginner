@@ -90,7 +90,7 @@ public class ShopManagement {
                     orderBusiness.getOrderDelivired().forEach(System.out::println);
                     break;
                 case 6:
-                    System.out.println("Tổng tiền của các đơn hàng là: "+ orderBusiness.getOrderOverdue());
+                    System.out.println("Tổng tiền của các đơn hàng là: "+ orderBusiness.getTotalRevenue());
                     break;
                 default:
                     System.out.println("Vui lòng chọn từ 1 đến 3");
