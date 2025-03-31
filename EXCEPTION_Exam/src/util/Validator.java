@@ -42,9 +42,8 @@ public class Validator {
                 if (bool.equalsIgnoreCase("true") || bool.equalsIgnoreCase("false")) {
                     return true;
                 }
-                return false;
             }catch (Exception e){
-                e.printStackTrace();
+                System.err.println("dữ liệu ko hợp lệ");
             }
         }while (true);
     }
