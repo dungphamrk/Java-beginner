@@ -105,12 +105,12 @@ public class Customer implements IApp {
     @Override
     public void inputData(Scanner scanner) {
         customerId=validateCustomerId(scanner,"Nhập vào mã id của khách hàng");
-        lastName=validateString(scanner,"Nhập vào tên của khách hàng",50,0);
-        firstName=validateString(scanner,"Nhập vào họ của khách hàng",30,0);
+        lastName=validateString(scanner,"Nhập vào họ của khách hàng",50,0);
+        firstName=validateString(scanner,"Nhập vào tên của khách hàng",30,0);
         dateOfBirth=validateDate(scanner,"Nhập vào ngày sinh của khách hàng");
         email=validateEmail(scanner,"Nhập vào email của khách hàng");
         address =validateString(scanner,"Nhập vào địa chỉ của khách hàng",255,0);
-        phoneNumber=validateString(scanner,"Nhập vào số điện thoại của khách hàng",10,0);
+        phoneNumber=validatePhoneNumber(scanner,"Nhập vào số điện thoại của khách hàng");
         gender=validateGender(scanner,"Nhập vào giới tính của khách hàng");
         customerType = validateString(scanner,"Nhập vào loại khách hàng",100,0);
     }

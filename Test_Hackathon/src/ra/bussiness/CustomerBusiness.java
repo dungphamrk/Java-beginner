@@ -80,10 +80,13 @@ public class CustomerBusiness {
                     break;
                 case 2:
                     listCustomer.stream().sorted(Comparator.comparing(Customer::getLastName).reversed()).forEach(Customer::displayData);
+                    break;
                 case 3:
                     listCustomer.stream().sorted(Comparator.comparing(Customer::getDateOfBirth)).forEach(Customer::displayData);
+                    break;
                 case 4:
                     listCustomer.stream().sorted(Comparator.comparing(Customer::getDateOfBirth).reversed()).forEach(Customer::displayData);
+                    break;
                 case 0:
                     return;
                 default:
@@ -139,7 +142,6 @@ public class CustomerBusiness {
                         System.out.println("Vui lòng nhập lại lựa chọn của bạn ");
                 }
             }while(true);
-
         }
         System.out.println("Mã khách hàng đó không tồn tại");
     }

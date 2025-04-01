@@ -1,18 +1,16 @@
 package ra.validate;
 
-import java.text.DateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.time.format.DateTimeParseException;
 import java.util.Locale;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Validator {
     public static String validateCustomerId(Scanner scanner,String message) {
         do {
             System.out.println(message);
-            String regex = "C+//d{4}";
+            String regex = "[Cc]\\d{4}";
             String newId = scanner.nextLine().trim();
             if (newId.matches(regex)) {
                 return newId;
@@ -54,7 +52,7 @@ public class Validator {
             System.out.println(message);
             try {
                 String newEmail = scanner.nextLine().trim();
-                if (!newEmail.matches("")) {
+                if (!newEmail.matches("[a-zA-Z0-9._%+-]+@gmail\\.com")) {
                     System.out.println("Email không hợp lệ, vui lòng nhập lại!");
                 }
                 return newEmail;
@@ -85,7 +83,23 @@ public class Validator {
             System.out.println(message);
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             String newDate = scanner.nextLine().trim();
-
+            try {
+                LocalDate.parse(newDate, dtf);
+                return newDate;
+            } catch (DateTimeParseException e) {
+                System.err.println("Ngày không hợp lệ, vui lòng nhập lại theo định dạng dd/MM/yyyy ");
+            }
         } while (true);
+    }
+    public static String validatePhoneNumber(Scanner scanner, String message){
+        do {
+            System.out.println(message);
+            String regex ="0[35789]\\d{8}";
+            String newPhoneNumber = scanner.nextLine().trim();
+            if (newPhoneNumber.matches(regex)) {
+                return newPhoneNumber;
+            }
+            System.err.println("Số điện thoại không hợp lệ. Vui lòng nhập lại.");
+        }while (true);
     }
 }
