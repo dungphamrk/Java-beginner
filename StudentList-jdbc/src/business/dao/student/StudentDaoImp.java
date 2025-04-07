@@ -14,22 +14,11 @@ public class StudentDaoImp implements StudentDao {
         Connection conn = null;
         CallableStatement callSt = null;
         try {
-            //1. Khởi tạo đối tượng connection làm việc với db
             conn = ConnectionDB.openConnection();
-            //2. Khởi tạo đối tượng callSt từ conn và gọi procedure để thao tác dữ liệu
             callSt = conn.prepareCall("{call get_count_student_by_status(?,?)}");
-            //3. Set giá trị cho các tham số vào
             callSt.setBoolean(1, status);
-            //4. Đăng ký kiểu dữ liệu cho các tham số ra
             callSt.registerOutParameter(2, Types.INTEGER);
-            //5. Thực hiện procedure và xử lý kết quả trả về
-            /*
-             * 1. excecuteQuery(): thực hiện các procedure thực hiện select
-             * 2. excecuteUpdate(): Thực hiện các procedure thực hiện insert, update, delete mà không có tham số trả ra (out parameter)
-             * 3. excecure():Thực hiện các procedure thực hiện insert, update, delete có tham số trả ra
-             * */
             callSt.execute();
-            //Lấy dữ liệu tham số trả ra
             return callSt.getInt(2);
         } catch (SQLException e) {
             e.fillInStackTrace();
@@ -47,19 +36,9 @@ public class StudentDaoImp implements StudentDao {
         CallableStatement callSt = null;
         Student student = null;
         try {
-            //1. Khởi tạo đối tượng connection làm việc với db
             conn = ConnectionDB.openConnection();
-            //2. Khởi tạo đối tượng callSt từ conn và gọi procedure để thao tác dữ liệu
             callSt = conn.prepareCall("{call get_student_by_id(?)}");
-            //3. Set giá trị cho các tham số vào
             callSt.setInt(1, id);
-            //4. Đăng ký kiểu dữ liệu cho các tham số ra
-            //5. Thực hiện procedure và xử lý kết quả trả về
-            /*
-             * 1. excecuteQuery(): thực hiện các procedure thực hiện select
-             * 2. excecuteUpdate(): Thực hiện các procedure thực hiện insert, update, delete mà không có tham số trả ra (out parameter)
-             * 3. excecure():Thực hiện các procedure thực hiện insert, update, delete có tham số trả ra
-             * */
             ResultSet rs = callSt.executeQuery();
             if (rs.next()) {
                 student = new Student();
@@ -84,18 +63,8 @@ public class StudentDaoImp implements StudentDao {
         CallableStatement callSt = null;
         List<Student> listStudents = null;
         try {
-            //1. Khởi tạo đối tượng connection làm việc với db
             conn = ConnectionDB.openConnection();
-            //2. Khởi tạo đối tượng callSt từ conn và gọi procedure để thao tác dữ liệu
             callSt = conn.prepareCall("{call find_all_student()}");
-            //3. Set giá trị cho các tham số vào
-            //4. Đăng ký kiểu dữ liệu cho các tham số ra
-            //5. Thực hiện procedure và xử lý kết quả trả về
-            /*
-             * 1. excecuteQuery(): thực hiện các procedure thực hiện select
-             * 2. excecuteUpdate(): Thực hiện các procedure thực hiện insert, update, delete mà không có tham số trả ra (out parameter)
-             * 3. excecure():Thực hiện các procedure thực hiện insert, update, delete có tham số trả ra
-             * */
             ResultSet rs = callSt.executeQuery();
             listStudents = new ArrayList<>();
             while (rs.next()) {
@@ -123,12 +92,9 @@ public class StudentDaoImp implements StudentDao {
         try {
             conn = ConnectionDB.openConnection();
             callSt = conn.prepareCall("{call create_student(?,?,?)}");
-            //set giá trị cho tham số vào
             callSt.setString(1, student.getName());
             callSt.setInt(2, student.getAge());
             callSt.setBoolean(3, student.isStatus());
-            //đăng ký kiểu dữ liệu cho tham số ra
-            //Thực hiện procedure và xử lý kết quả
             callSt.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -148,13 +114,10 @@ public class StudentDaoImp implements StudentDao {
         try {
             conn = ConnectionDB.openConnection();
             callSt = conn.prepareCall("{call update_student(?,?,?,?)}");
-            //set giá trị cho tham số vào
             callSt.setInt(1, student.getId());
             callSt.setString(2, student.getName());
             callSt.setInt(3, student.getAge());
             callSt.setBoolean(4, student.isStatus());
-            //đăng ký kiểu dữ liệu cho tham số ra
-            //Thực hiện procedure và xử lý kết quả
             callSt.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -174,10 +137,7 @@ public class StudentDaoImp implements StudentDao {
         try {
             conn = ConnectionDB.openConnection();
             callSt = conn.prepareCall("{call delete_student(?)}");
-            //set giá trị cho tham số vào
             callSt.setInt(1, student.getId());
-            //đăng ký kiểu dữ liệu cho tham số ra
-            //Thực hiện procedure và xử lý kết quả
             callSt.executeUpdate();
             return true;
         } catch (SQLException e) {

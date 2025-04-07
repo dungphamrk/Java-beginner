@@ -14,9 +14,6 @@ public class ConnectionDB {
     public static Connection openConnection() {
         Connection conn = null;
         try {
-            //1. Set driver kết nối đến CSDL MySQL - Với type-3 trở xuống
-//            Class.forName(DRIVER);//Type-4 tự nhận
-            //2. Khởi tạo đối tượng connection từ ứng dụng Java đến CSDL
             conn = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
         } catch (SQLException e) {
             System.err.println("Có lỗi trong quá trình kết nối với CSDL: " + e.getMessage());

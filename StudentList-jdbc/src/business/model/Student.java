@@ -7,6 +7,7 @@ public class Student {
     private String name;
     private int age;
     private boolean status;
+    private int classroomId;
 
     public Student() {
     }
@@ -18,6 +19,12 @@ public class Student {
         this.status = status;
     }
 
+    public int getClassroomId() {
+        return classroomId;
+    }
+    public void setClasroomId(int id){
+       this.classroomId = id;
+    }
     public int getId() {
         return id;
     }
@@ -57,11 +64,14 @@ public class Student {
         this.age = Integer.parseInt(scanner.nextLine());
         System.out.println("Nhập vào trạng thái sinh viên:");
         this.status = Boolean.parseBoolean(scanner.nextLine());
+        System.out.println("Nhập vào mã lớp học:");
+        this.classroomId = Integer.parseInt(scanner.nextLine());
     }
 
     @Override
     public String toString() {
-        return "Mã SV: " + this.id + " - Tên SV: "
-                + this.name + " - Tuổi: " + this.age + " - Trạng thái: " + this.status;
+        return "Mã SV: " + this.id + " - Tên SV: " + this.name +
+                " - Tuổi: " + this.age + " - Trạng thái: " + this.status +
+                " - Mã lớp: " + this.classroomId;
     }
 }

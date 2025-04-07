@@ -1,3 +1,4 @@
+import presentation.ClassroomUI;
 import presentation.StudentUI;
 
 import java.util.Scanner;
@@ -17,6 +18,7 @@ public class Main {
                     StudentUI.displayStudentMenu(scanner);
                     break;
                 case 2:
+                    ClassroomUI.displayClassroomMenu(scanner);
                     break;
                 case 3:
                     System.exit(0);
