@@ -1,8 +1,8 @@
 package ra.business.service.account;
 
-import business.dao.account.AccountDao;
-import business.dao.account.AccountDaoImp;
-import business.model.Account;
+import ra.business.dao.account.AccountDao;
+import ra.business.dao.account.AccountDaoImp;
+import ra.business.model.Account;
 
 import java.util.List;
 

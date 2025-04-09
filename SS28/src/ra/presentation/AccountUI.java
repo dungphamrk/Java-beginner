@@ -1,9 +1,7 @@
 package ra.presentation;
-
-import business.model.Account;
-import business.service.account.AccountService;
-import business.service.account.AccountServiceImp;
-
+import ra.business.model.Account;
+import ra.business.service.account.AccountService;
+import ra.business.service.account.AccountServiceImp;
 import java.util.List;
 import java.util.Scanner;
 

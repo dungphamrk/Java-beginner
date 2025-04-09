@@ -1,7 +1,8 @@
 package ra.business.dao.account;
 
-import business.dao.AppDao;
-import business.model.Account;
+import ra.business.dao.AppDao;
+import ra.business.model.Account;
+import ra.business.model.FundsTransfer;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface AccountDao extends AppDao {
     boolean updateAccount(Account account);
     boolean deleteAccount(int id);
     Account findById(int id);
+    boolean saveTransaction(FundsTransfer transaction);
+    List<FundsTransfer> getTransactionHistory();
 }

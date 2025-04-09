@@ -1,45 +1,15 @@
 package ra.business.dao.account;
 
-import business.config.ConnectionDB;
-import business.model.Account;
-import business.model.AccountStatus;
-
+import ra.business.config.ConnectionDB;
+import ra.business.model.Account;
+import ra.business.model.AccountStatus;
+import ra.business.model.FundsTransfer;
+import ra.business.model.TransactionStatus;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 public class AccountDaoImp implements AccountDao {
-
-    @Override
-    public int fundsTransfer(int accSenderId, String accSenderName, int accReceiverId, String accReceiverName, double amount) {
-        Connection conn = null;
-        CallableStatement callSt = null;
-        try {
-            conn = ConnectionDB.openConnection();
-            conn.setAutoCommit(false);
-            callSt = conn.prepareCall("{call funds_transfer_amount(?,?,?,?,?,?)}");
-            callSt.setInt(1, accSenderId);
-            callSt.setString(2, accSenderName);
-            callSt.setInt(3, accReceiverId);
-            callSt.setString(4, accReceiverName);
-            callSt.setDouble(5, amount);
-            callSt.registerOutParameter(6, Types.INTEGER);
-            callSt.execute();
-            conn.commit();
-            return callSt.getInt(6);
-        } catch (SQLException e) {
-            System.err.println("Có lỗi xảy ra khi chuyển khoản, rollback...");
-            try {
-                if (conn != null) conn.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        } finally {
-            ConnectionDB.closeConnection(conn, callSt);
-        }
-        return 0;
-    }
-
     @Override
     public double getBalanceById(int accountId) {
         Connection conn = null;
@@ -167,5 +137,99 @@ public class AccountDaoImp implements AccountDao {
             ConnectionDB.closeConnection(conn, callSt);
         }
         return null;
+    }
+    @Override
+    public boolean saveTransaction(FundsTransfer transaction) {
+        Connection conn = null;
+        CallableStatement callSt = null;
+        try {
+            conn = ConnectionDB.openConnection();
+            callSt = conn.prepareCall("{call save_transaction(?,?,?,?,?,?,?)}");
+            callSt.setInt(1, transaction.getSenderId());
+            callSt.setString(2, transaction.getSenderName());
+            callSt.setInt(3, transaction.getReceiverId());
+            callSt.setString(4, transaction.getReceiverName());
+            callSt.setDouble(5, transaction.getAmount());
+            callSt.setTimestamp(6, Timestamp.valueOf(transaction.getTransactionDate()));
+            callSt.setString(7, transaction.getStatus().name().toLowerCase());
+            int result = callSt.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            ConnectionDB.closeConnection(conn, callSt);
+        }
+    }
+
+    @Override
+    public int fundsTransfer(int accSenderId, String accSenderName, int accReceiverId,
+                             String accReceiverName, double amount) {
+        Connection conn = null;
+        CallableStatement callSt = null;
+        try {
+            conn = ConnectionDB.openConnection();
+            conn.setAutoCommit(false);
+            callSt = conn.prepareCall("{call funds_transfer_amount(?,?,?,?,?,?)}");
+            callSt.setInt(1, accSenderId);
+            callSt.setString(2, accSenderName);
+            callSt.setInt(3, accReceiverId);
+            callSt.setString(4, accReceiverName);
+            callSt.setDouble(5, amount);
+            callSt.registerOutParameter(6, Types.INTEGER);
+            callSt.execute();
+
+            int result = callSt.getInt(6);
+            // Lưu lịch sử giao dịch
+            if (result == 4) { // Thành công
+                FundsTransfer transaction = new FundsTransfer(
+                        accSenderId, accSenderName, accReceiverId, accReceiverName,
+                        amount, LocalDateTime.now(), TransactionStatus.SUCCESSFUL
+                );
+                saveTransaction(transaction);
+            }
+            conn.commit();
+            return result;
+        } catch (SQLException e) {
+            System.err.println("Có lỗi xảy ra khi chuyển khoản, rollback...");
+            try {
+                if (conn != null) conn.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            return 0;
+        } finally {
+            ConnectionDB.closeConnection(conn, callSt);
+        }
+    }
+
+    @Override
+    public List<FundsTransfer> getTransactionHistory() {
+        List<FundsTransfer> transactions = new ArrayList<>();
+        Connection conn = null;
+        CallableStatement callSt = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionDB.openConnection();
+            callSt = conn.prepareCall("{call get_transaction_history()}");
+            rs = callSt.executeQuery();
+            while (rs.next()) {
+                FundsTransfer transaction = new FundsTransfer();
+                transaction.setTransactionId(rs.getInt("transaction_id"));
+                transaction.setSenderId(rs.getInt("sender_id"));
+                transaction.setSenderName(rs.getString("sender_name"));
+                transaction.setReceiverId(rs.getInt("receiver_id"));
+                transaction.setReceiverName(rs.getString("receiver_name"));
+                transaction.setAmount(rs.getDouble("amount"));
+                transaction.setTransactionDate(rs.getTimestamp("transaction_date").toLocalDateTime());
+                transaction.setStatus(TransactionStatus.valueOf(rs.getString("status").toUpperCase()));
+                transactions.add(transaction);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionDB.closeConnection(conn, callSt);
+        }
+        return transactions;
     }
 }
