@@ -1,6 +1,8 @@
 package ra.business.dao.account;
 
 import ra.business.config.ConnectionDB;
+import ra.business.dao.fundtransfer.FundsTransferDao;
+import ra.business.dao.fundtransfer.FundsTransferDaoImp;
 import ra.business.model.Account;
 import ra.business.model.AccountStatus;
 import ra.business.model.FundsTransfer;
@@ -10,6 +12,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 public class AccountDaoImp implements AccountDao {
+    private final FundsTransferDao fundsTransferDao = new FundsTransferDaoImp();
+
     @Override
     public double getBalanceById(int accountId) {
         Connection conn = null;
@@ -162,6 +166,7 @@ public class AccountDaoImp implements AccountDao {
         }
     }
 
+
     @Override
     public int fundsTransfer(int accSenderId, String accSenderName, int accReceiverId,
                              String accReceiverName, double amount) {
@@ -180,13 +185,12 @@ public class AccountDaoImp implements AccountDao {
             callSt.execute();
 
             int result = callSt.getInt(6);
-            // Lưu lịch sử giao dịch
             if (result == 4) { // Thành công
                 FundsTransfer transaction = new FundsTransfer(
                         accSenderId, accSenderName, accReceiverId, accReceiverName,
                         amount, LocalDateTime.now(), TransactionStatus.SUCCESSFUL
                 );
-                saveTransaction(transaction);
+                fundsTransferDao.saveTransaction(transaction);
             }
             conn.commit();
             return result;
