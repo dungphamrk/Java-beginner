@@ -15,9 +15,11 @@ public class EmployeeServiceImp implements EmployeeService {
         employeeDao = new EmployeeDaoImp();
     }
     @Override
-    public List<Employee> findAllWithPaging() {
-        return employeeDao.findAll();
+    public List<Employee> findAllWithPaging(int page, int size) {
+        return employeeDao.findAllWithPaging(page, size);
     }
+
+
 
     @Override
     public int save(Employee employee) {
@@ -25,12 +27,12 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     @Override
-    public boolean update(Employee employee) {
+    public int update(Employee employee) {
         return employeeDao.update(employee);
     }
 
     @Override
-    public boolean delete(Employee employee) {
+    public int delete(Employee employee) {
         return employeeDao.delete(employee);
     }
 

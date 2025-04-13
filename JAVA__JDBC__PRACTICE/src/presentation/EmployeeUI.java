@@ -7,8 +7,6 @@ import business.service.employee.EmployeeServiceImp;
 import validate.EmployeeValidator;
 import validate.Validator;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -80,203 +78,122 @@ public class EmployeeUI {
     }
 
     private static void listEmployees(Scanner scanner, EmployeeService employeeService) {
-        System.out.println("Nhập số trang (bắt đầu từ 1):");
-        String pageStr = scanner.nextLine();
-        if (!Validator.isValidDataType(pageStr, Integer.class)) {
-            System.err.println("Trang không hợp lệ");
-            return;
-        }
-        int page = Integer.parseInt(pageStr);
-        if (page < 1) {
-            System.err.println("Trang phải lớn hơn 0");
-            return;
-        }
-        System.out.println("Nhập số bản ghi mỗi trang (mặc định 10):");
-        String sizeStr = scanner.nextLine();
-        if (!Validator.isValidDataType(sizeStr, Integer.class)) {
-            System.err.println("Kích thước trang không hợp lệ");
-            return;
-        }
-        int size = Integer.parseInt(sizeStr);
-        if (size < 1) {
-            System.err.println("Kích thước trang phải lớn hơn 0");
-            return;
-        }
-        List<Employee> employees = employeeService.findAllWithPaging();
-        if (employees.isEmpty()) {
-            System.err.println("Không tìm thấy nhân viên hoặc trang không hợp lệ");
-        } else {
-            System.out.println("Danh sách nhân viên:");
-            employees.forEach(emp -> System.out.println(emp.getEmployeeId() + " | " + emp.getFullName() + " | " + emp.getEmail() + " | " + emp.getStatus()));
-        }
+        final int SIZE = 10; // Mặc định 10 bản ghi mỗi trang
+        int totalEmployees = employeeService.getTotalEmployeeCount();
+        int totalPages = (int) Math.ceil((double) totalEmployees / SIZE);
+        int currentPage = 1;
+
+        do {
+            System.out.println("Danh sách nhân viên (Trang " + currentPage + "/" + totalPages + "):");
+            List<Employee> employees = employeeService.findAllWithPaging(currentPage, SIZE);
+            if (employees.isEmpty()) {
+                System.err.println("Không tìm thấy nhân viên ở trang này.");
+            } else {
+                employees.forEach(emp -> System.out.println(emp.getEmployeeId() + " | " +
+                        emp.getFullName() + " | " +
+                        emp.getEmail() + " | " +
+                        emp.getStatus()));
+                System.out.println("Tổng số bản ghi: " + totalEmployees + " | Tổng số trang: " + totalPages);
+            }
+
+            // Menu điều hướng
+            System.out.println("***************ĐIỀU HƯỚNG**************");
+            System.out.println("1. Trang trước");
+            System.out.println("2. Trang sau");
+            System.out.println("3. Chọn trang");
+            System.out.println("4. Thoát");
+            int choice = Validator.validateChoice(scanner);
+            switch (choice) {
+                case 1: // Trang trước
+                    if (currentPage > 1) {
+                        currentPage--;
+                    } else {
+                        System.err.println("Đã ở trang đầu tiên!");
+                    }
+                    break;
+                case 2: // Trang sau
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                    } else {
+                        System.err.println("Đã ở trang cuối cùng!");
+                    }
+                    break;
+                case 3: // Chọn trang
+                    System.out.println("Nhập số trang (1-" + totalPages + "):");
+                    String pageStr = scanner.nextLine();
+                    if (!Validator.isValidDataType(pageStr, Integer.class)) {
+                        System.err.println("Trang không hợp lệ");
+                        break;
+                    }
+                    int page = Integer.parseInt(pageStr);
+                    if (page < 1 || page > totalPages) {
+                        System.err.println("Trang phải từ 1 đến " + totalPages);
+                        break;
+                    }
+                    currentPage = page;
+                    break;
+                case 4: // Thoát
+                    return;
+                default:
+                    System.err.println("Vui lòng chọn từ 1-4");
+            }
+        } while (true);
     }
 
     private static void addEmployee(Scanner scanner, EmployeeService employeeService) {
         Employee emp = new Employee();
-        System.out.println("Nhập mã nhân viên (E + 4 số):");
-        emp.setEmployeeId(scanner.nextLine());
-        System.out.println("Nhập tên nhân viên (15-150 ký tự):");
-        emp.setFullName(scanner.nextLine());
-        System.out.println("Nhập email:");
-        emp.setEmail(scanner.nextLine());
-        System.out.println("Nhập số điện thoại (10 số, đầu số hợp lệ):");
-        emp.setPhoneNumber(scanner.nextLine());
-        System.out.println("Nhập giới tính (MALE/FEMALE/OTHER):");
-        String genderStr = scanner.nextLine();
-        if (Validator.isValidDataType(genderStr, Employee.Gender.class)) {
-            emp.setGender(Employee.Gender.valueOf(genderStr.toUpperCase()));
-        } else {
-            System.err.println("Giới tính không hợp lệ");
-            return;
-        }
-        System.out.println("Nhập bậc lương (> 0):");
-        String payGradeStr = scanner.nextLine();
-        if (Validator.isValidDataType(payGradeStr, Integer.class)) {
-            emp.setPayGrade(Integer.parseInt(payGradeStr));
-        } else {
-            System.err.println("Bậc lương không hợp lệ");
-            return;
-        }
-        System.out.println("Nhập lương (> 0):");
-        String salaryStr = scanner.nextLine();
-        if (Validator.isValidDataType(salaryStr, Double.class)) {
-            emp.setSalary(Double.parseDouble(salaryStr));
-        } else {
-            System.err.println("Lương không hợp lệ");
-            return;
-        }
-        System.out.println("Nhập ngày sinh (dd/MM/yyyy):");
-        String birthDateStr = scanner.nextLine();
-        if (Validator.isValidDataType(birthDateStr, LocalDate.class)) {
-            emp.setBirthDate(LocalDate.parse(birthDateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        } else {
-            System.err.println("Ngày sinh không hợp lệ");
-            return;
-        }
-        System.out.println("Nhập địa chỉ:");
-        emp.setAddress(scanner.nextLine());
-        System.out.println("Nhập trạng thái (ACTIVE/INACTIVE/ONLEAVE/POLICYLEAVE):");
-        String statusStr = scanner.nextLine();
-        if (Validator.isValidDataType(statusStr, Employee.Status.class)) {
-            emp.setStatus(Employee.Status.valueOf(statusStr.toUpperCase()));
-        } else {
-            System.err.println("Trạng thái không hợp lệ");
-            return;
-        }
-        System.out.println("Nhập mã phòng ban:");
-        String deptIdStr = scanner.nextLine();
-        if (Validator.isValidDataType(deptIdStr, Integer.class)) {
-            emp.setDepartmentId(Integer.parseInt(deptIdStr));
-        } else {
-            System.err.println("Mã phòng ban không hợp lệ");
-            return;
-        }
-
-        String validationError = EmployeeValidator.validateEmployee(emp);
-        if (validationError != null) {
-            System.err.println(validationError);
-            return;
-        }
-
+        emp.inputData(scanner);
         int result = employeeService.save(emp);
-        if (result!=0) {
+        if (result == 1) {
             System.out.println("Thêm nhân viên thành công!");
         } else {
-            System.err.println(getAddEmployeeErrorMessage());
+            System.err.println(getAddEmployeeErrorMessage(result));
         }
     }
 
-    private static String getAddEmployeeErrorMessage() {
-        // Ánh xạ p_result từ stored procedure AddEmployee
-        // Hiện DAO trả về boolean, giả lập lỗi phổ biến
-        return switch ((int) (Math.random() * 3 + 2)) {
+    private static String getAddEmployeeErrorMessage(int p_result) {
+        return switch (p_result) {
             case 2 -> "Phòng ban không tồn tại";
             case 3 -> "Phòng ban không hoạt động";
             case 4 -> "Mã nhân viên hoặc email đã tồn tại";
+            case 5 -> "Mã nhân viên không đúng định dạng (E + 4 số)";
+            case 6 -> "Tên nhân viên không đúng độ dài (15-150 ký tự)";
+            case 7 -> "Email không đúng định dạng";
+            case 8 -> "Số điện thoại không hợp lệ";
+            case 9 -> "Bậc lương không hợp lệ";
+            case 10 -> "Lương không hợp lệ";
             default -> "Lỗi không xác định khi thêm nhân viên";
         };
     }
 
     private static void updateEmployee(Scanner scanner, EmployeeService employeeService) {
-        Employee emp = new Employee();
         System.out.println("Nhập mã nhân viên cần cập nhật:");
-        emp.setEmployeeId(scanner.nextLine());
-        System.out.println("Nhập tên nhân viên mới (15-150 ký tự):");
-        emp.setFullName(scanner.nextLine());
-        System.out.println("Nhập email mới:");
-        emp.setEmail(scanner.nextLine());
-        System.out.println("Nhập số điện thoại mới (10 số, đầu số hợp lệ):");
-        emp.setPhoneNumber(scanner.nextLine());
-        System.out.println("Nhập giới tính mới (MALE/FEMALE/OTHER):");
-        String genderStr = scanner.nextLine();
-        if (Validator.isValidDataType(genderStr, Employee.Gender.class)) {
-            emp.setGender(Employee.Gender.valueOf(genderStr.toUpperCase()));
-        } else {
-            System.err.println("Giới tính không hợp lệ");
+        String employeeId = scanner.nextLine();
+        if (!EmployeeValidator.isValidEmployeeId(employeeId)) {
+            System.err.println("Mã nhân viên không đúng định dạng (E + 4 số)");
             return;
         }
-        System.out.println("Nhập bậc lương mới (> 0):");
-        String payGradeStr = scanner.nextLine();
-        if (Validator.isValidDataType(payGradeStr, Integer.class)) {
-            emp.setPayGrade(Integer.parseInt(payGradeStr));
-        } else {
-            System.err.println("Bậc lương không hợp lệ");
-            return;
-        }
-        System.out.println("Nhập lương mới (> 0):");
-        String salaryStr = scanner.nextLine();
-        if (Validator.isValidDataType(salaryStr, Double.class)) {
-            emp.setSalary(Double.parseDouble(salaryStr));
-        } else {
-            System.err.println("Lương không hợp lệ");
-            return;
-        }
-        System.out.println("Nhập ngày sinh mới (dd/MM/yyyy):");
-        String birthDateStr = scanner.nextLine();
-        if (Validator.isValidDataType(birthDateStr, LocalDate.class)) {
-            emp.setBirthDate(LocalDate.parse(birthDateStr, DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        } else {
-            System.err.println("Ngày sinh không hợp lệ");
-            return;
-        }
-        System.out.println("Nhập địa chỉ mới:");
-        emp.setAddress(scanner.nextLine());
-        System.out.println("Nhập trạng thái mới (ACTIVE/INACTIVE/ONLEAVE/POLICYLEAVE):");
-        String statusStr = scanner.nextLine();
-        if (Validator.isValidDataType(statusStr, Employee.Status.class)) {
-            emp.setStatus(Employee.Status.valueOf(statusStr.toUpperCase()));
-        } else {
-            System.err.println("Trạng thái không hợp lệ");
-            return;
-        }
-        System.out.println("Nhập mã phòng ban mới:");
-        String deptIdStr = scanner.nextLine();
-        if (Validator.isValidDataType(deptIdStr, Integer.class)) {
-            emp.setDepartmentId(Integer.parseInt(deptIdStr));
-        } else {
-            System.err.println("Mã phòng ban không hợp lệ");
-            return;
-        }
-
-        String validationError = EmployeeValidator.validateEmployee(emp);
-        if (validationError != null) {
-            System.err.println(validationError);
-            return;
-        }
-
-        boolean result = employeeService.update(emp);
-        if (result) {
+        Employee emp = new Employee();
+        emp.setEmployeeId(employeeId);
+        emp.inputData(scanner); // Sử dụng inputData để nhập các trường còn lại
+        int result = employeeService.update(emp);
+        if (result == 1) {
             System.out.println("Cập nhật nhân viên thành công!");
         } else {
-            System.err.println(getUpdateEmployeeErrorMessage());
+            System.err.println(getUpdateEmployeeErrorMessage(result));
         }
     }
 
-    private static String getUpdateEmployeeErrorMessage() {
-        return switch ((int) (Math.random() * 3 + 2)) {
+    private static String getUpdateEmployeeErrorMessage(int p_result) {
+        return switch (p_result) {
             case 2 -> "Phòng ban không tồn tại";
             case 3 -> "Phòng ban không hoạt động";
             case 4 -> "Email đã tồn tại";
+            case 5 -> "Tên nhân viên không đúng độ dài (15-150 ký tự)";
+            case 6 -> "Email không đúng định dạng";
+            case 7 -> "Số điện thoại không hợp lệ";
+            case 8 -> "Bậc lương không hợp lệ";
+            case 9 -> "Lương không hợp lệ";
             case 10 -> "Nhân viên không tồn tại";
             default -> "Lỗi không xác định khi cập nhật nhân viên";
         };
@@ -291,8 +208,8 @@ public class EmployeeUI {
         }
         Employee emp = new Employee();
         emp.setEmployeeId(employeeId);
-        boolean result = employeeService.delete(emp);
-        if (result) {
+        int result = employeeService.delete(emp);
+        if (result == 1) {
             System.out.println("Xóa nhân viên thành công (trạng thái chuyển thành INACTIVE)!");
         } else {
             System.err.println("Nhân viên không tồn tại");

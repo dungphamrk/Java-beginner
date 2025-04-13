@@ -13,19 +13,14 @@ public class UserDaoImp implements UserDao {
         CallableStatement callStmt = null;
         try{
             conn = ConnectionDB.openConnection();
-            callStmt = conn.prepareCall("{call Login(?,?)}");
+            callStmt = conn.prepareCall("{call Login(?,?,?)}");
             callStmt.setString(1,username);
             callStmt.setString(2,password);
             callStmt.registerOutParameter(3, Types.INTEGER);
-            callStmt.executeQuery();
-            return callStmt.getInt(2)==1;
+            callStmt.execute();
+            return callStmt.getInt(3)==1;
         } catch (SQLException e) {
-            System.err.println("Có lỗi xảy ra trong quá trình đăng nhập, dữ liệu đã được rollback");
-            try {
-                conn.rollback();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
+            System.err.println("Có lỗi xảy ra trong quá trình đăng nhập");
         } catch (Exception e) {
             System.err.println("Có lỗi không xác định khi làm việc với db: " + e.getMessage());
         } finally {

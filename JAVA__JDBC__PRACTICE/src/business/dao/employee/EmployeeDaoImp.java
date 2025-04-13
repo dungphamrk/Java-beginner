@@ -69,6 +69,7 @@ public class EmployeeDaoImp implements EmployeeDao {
         CallableStatement callStmt = null;
         try {
             conn = ConnectionDB.openConnection();
+            conn.setAutoCommit(false);
             callStmt = conn.prepareCall("{call AddEmployee(?,?,?,?,?,?,?,?,?,?,?,?)}");
             callStmt.setString(1, employee.getEmployeeId());
             callStmt.setString(2, employee.getFullName());
@@ -83,6 +84,7 @@ public class EmployeeDaoImp implements EmployeeDao {
             callStmt.setInt(11, employee.getDepartmentId());
             callStmt.registerOutParameter(12, Types.INTEGER);
             callStmt.execute();
+            conn.commit();
             return callStmt.getInt(12) ;
         } catch (SQLException e) {
             System.err.println("Lỗi khi thêm nhân viên: " + e.getMessage());
@@ -98,11 +100,12 @@ public class EmployeeDaoImp implements EmployeeDao {
     }
 
     @Override
-    public boolean update(Employee employee) {
+    public int update(Employee employee) {
         Connection conn = null;
         CallableStatement callStmt = null;
         try {
             conn = ConnectionDB.openConnection();
+            conn.setAutoCommit(false);
             callStmt = conn.prepareCall("{call UpdateEmployee(?,?,?,?,?,?,?,?,?,?,?,?)}");
             callStmt.setString(1, employee.getEmployeeId());
             callStmt.setString(2, employee.getFullName());
@@ -117,7 +120,8 @@ public class EmployeeDaoImp implements EmployeeDao {
             callStmt.setInt(11, employee.getDepartmentId());
             callStmt.registerOutParameter(12, Types.INTEGER);
             callStmt.execute();
-            return callStmt.getInt(12) == 1;
+            conn.commit();
+            return callStmt.getInt(12) ;
         } catch (SQLException e) {
             System.err.println("Lỗi khi cập nhật nhân viên: " + e.getMessage());
             try {
@@ -128,20 +132,22 @@ public class EmployeeDaoImp implements EmployeeDao {
         } finally {
             ConnectionDB.closeConnection(conn, callStmt);
         }
-        return false;
+        return 0;
     }
 
     @Override
-    public boolean delete(Employee employee) {
+    public int delete(Employee employee) {
         Connection conn = null;
         CallableStatement callStmt = null;
         try {
             conn = ConnectionDB.openConnection();
+            conn.setAutoCommit(false);
             callStmt = conn.prepareCall("{call DeleteEmployee(?,?)}");
             callStmt.setString(1, employee.getEmployeeId());
             callStmt.registerOutParameter(2, Types.INTEGER);
             callStmt.execute();
-            return callStmt.getInt(2) == 1;
+            conn.commit();
+            return callStmt.getInt(2) ;
         } catch (SQLException e) {
             System.err.println("Lỗi khi xóa nhân viên: " + e.getMessage());
             try {
@@ -152,7 +158,7 @@ public class EmployeeDaoImp implements EmployeeDao {
         } finally {
             ConnectionDB.closeConnection(conn, callStmt);
         }
-        return false;
+        return 0;
     }
 
     @Override

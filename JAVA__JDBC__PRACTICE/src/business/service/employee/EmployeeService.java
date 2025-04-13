@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface EmployeeService extends AppService<Employee> {
-    List<Employee> findAllWithPaging();
+    List<Employee> findAllWithPaging(int page, int size);
     List<Employee> searchByName(String name);
     List<Employee> searchByAgeRange(int minAge, int maxAge);
     List<Employee> sortBySalaryDesc(int page, int size);

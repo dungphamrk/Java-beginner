@@ -59,12 +59,14 @@ public class DepartmentDaoImp implements DepartmentDao {
         CallableStatement callStmt = null;
         try {
             conn = ConnectionDB.openConnection();
+            conn.setAutoCommit(false);
             callStmt = conn.prepareCall("{call AddDepartment(?,?,?,?)}");
             callStmt.setString(1, department.getDepartmentName());
             callStmt.setString(2, department.getDescription());
             callStmt.setString(3, department.getStatus().name());
             callStmt.registerOutParameter(4, Types.INTEGER);
             callStmt.execute();
+            conn.commit();
             return callStmt.getInt(4) ;
         } catch (SQLException e) {
             System.err.println("Lỗi khi thêm phòng ban: " + e.getMessage());
@@ -80,11 +82,12 @@ public class DepartmentDaoImp implements DepartmentDao {
     }
 
     @Override
-    public boolean update(Department department) {
+    public int update(Department department) {
         Connection conn = null;
         CallableStatement callStmt = null;
         try {
             conn = ConnectionDB.openConnection();
+            conn.setAutoCommit(false);
             callStmt = conn.prepareCall("{call UpdateDepartment(?,?,?,?,?)}");
             callStmt.setInt(1, department.getDepartmentId());
             callStmt.setString(2, department.getDepartmentName());
@@ -92,7 +95,8 @@ public class DepartmentDaoImp implements DepartmentDao {
             callStmt.setString(4, department.getStatus().name());
             callStmt.registerOutParameter(5, Types.INTEGER);
             callStmt.execute();
-            return callStmt.getInt(5) == 1;
+            conn.commit();
+            return callStmt.getInt(5);
         } catch (SQLException e) {
             System.err.println("Lỗi khi cập nhật phòng ban: " + e.getMessage());
             try {
@@ -103,20 +107,22 @@ public class DepartmentDaoImp implements DepartmentDao {
         } finally {
             ConnectionDB.closeConnection(conn, callStmt);
         }
-        return false;
+        return 0;
     }
 
     @Override
-    public boolean delete(Department department) {
+    public int delete(Department department) {
         Connection conn = null;
         CallableStatement callStmt = null;
         try {
             conn = ConnectionDB.openConnection();
+            conn.setAutoCommit(false);
             callStmt = conn.prepareCall("{call DeleteDepartment(?,?)}");
             callStmt.setInt(1, department.getDepartmentId());
             callStmt.registerOutParameter(2, Types.INTEGER);
             callStmt.execute();
-            return callStmt.getInt(2) == 1;
+            conn.commit();
+            return callStmt.getInt(2) ;
         } catch (SQLException e) {
             System.err.println("Lỗi khi xóa phòng ban: " + e.getMessage());
             try {
@@ -127,7 +133,7 @@ public class DepartmentDaoImp implements DepartmentDao {
         } finally {
             ConnectionDB.closeConnection(conn, callStmt);
         }
-        return false;
+        return 0;
     }
 
     @Override

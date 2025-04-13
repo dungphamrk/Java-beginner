@@ -13,8 +13,8 @@ public class DepartmentServiceImp implements DepartmentService {
         departmentDao = new DepartmentDaoImp();
     }
     @Override
-    public List<Department> findAllWithPaging() {
-        return departmentDao.findAll();
+    public List<Department> findAllWithPaging(int  page, int size) {
+        return departmentDao.findAllWithPaging(page, size);
     }
 
     @Override
@@ -23,12 +23,12 @@ public class DepartmentServiceImp implements DepartmentService {
     }
 
     @Override
-    public boolean update(Department department) {
+    public int update(Department department) {
         return departmentDao.update(department);
     }
 
     @Override
-    public boolean delete(Department department) {
+    public int delete(Department department) {
         return departmentDao.delete(department);
     }
 

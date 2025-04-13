@@ -31,4 +31,6 @@ public interface EmployeeDao extends AppDao<Employee> {
 
     // Phòng ban có tổng lương cao nhất
     Department getDepartmentWithHighestSalary();
+
+    List<Employee> findAllWithPaging(int page, int size);
 }

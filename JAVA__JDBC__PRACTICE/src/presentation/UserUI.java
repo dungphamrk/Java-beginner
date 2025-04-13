@@ -31,7 +31,6 @@ public class UserUI {
 
     private static boolean displayLoginMenu(Scanner scanner) {
         UserService userService = new UserServiceImp();
-        System.out.println("***************LOGIN MENU**************");
         System.out.println("Nhập tên đăng nhập:");
         String username = scanner.nextLine();
         System.out.println("Nhập mật khẩu:");
